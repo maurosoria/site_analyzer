@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
 from datetime import datetime
-from ..models.scan_result import EnumerationResult
-from ..core.config import Config
+from models.scan_result import EnumerationResult
+from core.config import Config
 
 class BaseEnumerator(ABC):
     """Base class for all enumeration strategies"""

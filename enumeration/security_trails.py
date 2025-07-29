@@ -1,10 +1,10 @@
 import requests
 from typing import Dict, List, Optional
 from datetime import datetime
-from .base import BaseEnumerator
-from ..models.scan_result import EnumerationResult
-from ..core.config import Config
-from ..core.exceptions import APIException
+from enumeration.base import BaseEnumerator
+from models.scan_result import EnumerationResult
+from core.config import Config
+from core.exceptions import APIException
 
 class SecurityTrails:
     """SecurityTrails API wrapper - adapted from Mohiverse notebook"""

@@ -1,18 +1,18 @@
 import asyncio
 from typing import Dict, List, Set
 from playwright.async_api import async_playwright
-from .base import BaseEnumerator
-from ..models.scan_result import EnumerationResult
-from ..core.config import Config
-from ..lib.site_analyzer import load_scripts, get_url_content
-from ..lib.extractors import (
+from enumeration.base import BaseEnumerator
+from models.scan_result import EnumerationResult
+from core.config import Config
+from lib.site_analyzer import load_scripts, get_url_content
+from lib.extractors import (
     extract_emails_from_js, extract_urls_from_js, 
     extract_keywords_from_js, extract_endpoints,
     extract_js_paths, extract_sourcemap_matches
 )
-from ..lib.scan_result import ScanResults
-from ..plugins.factory import FrameworkDetectionEngine
-from ..analyzers.dom_patterns import DOMPatternAnalyzer
+from lib.scan_result import ScanResults
+from plugins.factory import FrameworkDetectionEngine
+from analyzers.dom_patterns import DOMPatternAnalyzer
 
 class WebScannerEnumerator(BaseEnumerator):
     """Web scanner enumeration strategy with JavaScript injection"""

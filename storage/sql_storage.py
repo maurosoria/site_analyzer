@@ -2,9 +2,9 @@ import json
 import sqlite3
 from typing import Dict, List, Optional
 from datetime import datetime
-from .base import BaseStorage, SQLStorageMixin
-from ..models.scan_result import ScanResults, ScanStatus, EnumerationResult
-from ..core.config import Config
+from storage.base import BaseStorage, SQLStorageMixin
+from models.scan_result import ScanResults, ScanStatus, EnumerationResult
+from core.config import Config
 
 class SQLStorage(BaseStorage, SQLStorageMixin):
     """SQL database storage implementation (SQLite)"""

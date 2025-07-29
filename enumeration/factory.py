@@ -1,10 +1,10 @@
 from typing import Dict, Type, List
-from .base import BaseEnumerator
-from .security_trails import SecurityTrailsEnumerator
-from .dns_enumeration import DNSEnumerator
-from .web_scanner import WebScannerEnumerator
-from ..core.config import Config
-from ..core.exceptions import ConfigurationException
+from enumeration.base import BaseEnumerator
+from enumeration.security_trails import SecurityTrailsEnumerator
+from enumeration.dns_enumeration import DNSEnumerator
+from enumeration.web_scanner import WebScannerEnumerator
+from core.config import Config
+from core.exceptions import ConfigurationException
 
 class EnumeratorFactory:
     """Factory for creating enumeration strategies"""

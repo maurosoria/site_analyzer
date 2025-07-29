@@ -1,9 +1,9 @@
 import requests
 import socket
 from typing import Dict, List, Set
-from .base import BaseEnumerator
-from ..models.scan_result import EnumerationResult
-from ..core.config import Config
+from enumeration.base import BaseEnumerator
+from models.scan_result import EnumerationResult
+from core.config import Config
 
 class DNSEnumerator(BaseEnumerator):
     """DNS enumeration strategy"""
