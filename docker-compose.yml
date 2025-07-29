@@ -15,7 +15,7 @@ services:
       - ./logs:/app/logs
     env_file:
       - .env.rest
-    command: ["python", "main_refactored.py", "rest"]
+    command: ["python", "-m", "main_refactored", "rest"]
     restart: unless-stopped
     networks:
       - site-analyzer-network
@@ -46,7 +46,7 @@ services:
       - ./logs:/app/logs
     env_file:
       - .env.grpc
-    command: ["python", "main_refactored.py", "grpc"]
+    command: ["python", "-m", "main_refactored", "grpc"]
     restart: unless-stopped
     networks:
       - site-analyzer-network
