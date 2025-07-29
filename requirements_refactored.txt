@@ -1,11 +1,9 @@
 # Core dependencies
 playwright>=1.40.0
 requests>=2.31.0
-asyncio
 
 # Storage backends
 pymongo>=4.6.0  # For MongoDB storage
-# sqlite3 is built-in for Python 3.x
 
 # API frameworks
 flask>=3.0.0  # For REST API
@@ -13,14 +11,6 @@ flask-restx>=1.3.0  # For Swagger/OpenAPI documentation
 grpcio>=1.60.0  # For gRPC server
 grpcio-tools>=1.60.0  # For gRPC code generation
 grpcio-status>=1.60.0  # For gRPC status codes
-
-# Data handling
-dataclasses  # Built-in for Python 3.7+
-typing  # Built-in for Python 3.5+
-datetime  # Built-in
-json  # Built-in
-uuid  # Built-in
-re  # Built-in
 
 # Optional dependencies for enhanced functionality
 python-dotenv>=1.0.0  # For environment variable management
