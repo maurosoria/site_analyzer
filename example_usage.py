@@ -15,6 +15,7 @@ from core.analyzer import SiteAnalyzer
 from storage.factory import StorageFactory
 from enumeration.factory import EnumerationFactory
 from lib.logging_utils import init_logging, highlight
+from navigation.prompt_navigator import PromptNavigator
 
 @dataclass
 class FrameworkConfig:
@@ -33,6 +34,8 @@ class FrameworkConfig:
     aws_bedrock_url: Optional[str] = None
     aws_region: str = "us-east-1"
     llm_model: str = "anthropic.claude-3-sonnet-20240229-v1:0"
+    
+    capsolver_api_key: Optional[str] = None
     
     enumerators: Optional[List[str]] = None
     
@@ -70,6 +73,7 @@ class SiteAnalyzerFramework:
         print(f"🎭 Playwright instances: {config.num_playwright_instances}")
         print(f"💾 Storage type: {config.storage_type}")
         print(f"🤖 LLM integration: {'✅' if config.aws_bedrock_url else '❌'}")
+        print(f"🔓 Captcha solving: {'✅' if config.capsolver_api_key else '❌'}")
     
     async def analyze_domains(self) -> List[Dict[str, Any]]:
         """Analyze all domains with load balancing across Playwright instances"""
@@ -131,6 +135,20 @@ class SiteAnalyzerFramework:
         }
         
         return summary
+    
+    async def navigate_with_prompt(self, url: str, prompt: str, credentials: Optional[Dict[str, str]] = None):
+        """Navigate a website using natural language prompts"""
+        if not self.config.capsolver_api_key:
+            raise ValueError("Capsolver API key required for navigation with captcha solving")
+        
+        navigator = PromptNavigator(self.core_config, self.config.capsolver_api_key)
+        
+        result = await navigator.navigate_with_prompt(url, prompt, credentials)
+        
+        highlight(f"Navigation completed: {result.successful_steps}/{result.total_steps} steps successful", "SUCCESS")
+        print(f"📁 Screenshots saved to: {result.screenshots_directory}")
+        
+        return result
 
 def simple_example():
     """Simple example with a single domain"""
@@ -200,9 +218,81 @@ def load_balanced_example():
     print(f"\n⏱️  Analysis completed in {end_time - start_time:.2f} seconds")
     print(f"📈 Average time per domain: {(end_time - start_time) / len(domains):.2f} seconds")
 
+async def navigation_example():
+    """Example demonstrating prompt-based navigation with screenshot capture"""
+    config = FrameworkConfig(
+        domains=["example.com"],
+        num_playwright_instances=1,
+        storage_type="file",
+        output_dir="./navigation_results",
+        capsolver_api_key="your-capsolver-api-key-here"  # User should provide real key
+    )
+    
+    framework = SiteAnalyzerFramework(config)
+    
+    print("\n🔐 Registration Example:")
+    credentials = {
+        "email": "test@example.com",
+        "username": "testuser123",
+        "password": "SecurePassword123!",
+        "confirm_password": "SecurePassword123!",
+        "first_name": "Test",
+        "last_name": "User"
+    }
+    
+    try:
+        result = await framework.navigate_with_prompt(
+            url="https://example.com/register",
+            prompt="register in this website with some predefined credentials",
+            credentials=credentials
+        )
+        
+        print(f"✅ Registration: {result.successful_steps}/{result.total_steps} steps completed")
+        print(f"📸 Screenshots: {len([s for s in result.steps if s.screenshot_path])}")
+        
+        captcha_steps = [s for s in result.steps if "captcha" in s.action.lower()]
+        if captcha_steps:
+            print(f"🤖 Captchas solved: {len(captcha_steps)}")
+    
+    except Exception as e:
+        print(f"❌ Registration failed: {e}")
+    
+    print("\n🔑 Login Example:")
+    login_credentials = {
+        "email": "user@example.com",
+        "password": "MyPassword123!"
+    }
+    
+    try:
+        result = await framework.navigate_with_prompt(
+            url="https://example.com/login",
+            prompt="login to this website with credentials",
+            credentials=login_credentials
+        )
+        
+        print(f"✅ Login: {result.successful_steps}/{result.total_steps} steps completed")
+    
+    except Exception as e:
+        print(f"❌ Login failed: {e}")
+    
+    print("\n🔍 Search Example:")
+    try:
+        result = await framework.navigate_with_prompt(
+            url="https://example.com",
+            prompt="search for python tutorials on this website"
+        )
+        
+        print(f"✅ Search: {result.successful_steps}/{result.total_steps} steps completed")
+    
+    except Exception as e:
+        print(f"❌ Search failed: {e}")
+
 if __name__ == "__main__":
     print("🎯 Site Analyzer Framework Examples")
     print("=" * 50)
     
     print("\n1️⃣  Simple Example:")
     simple_example()
+    
+    print("\n🚀 Navigation Example:")
+    asyncio.run(navigation_example())
