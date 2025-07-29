@@ -19,6 +19,57 @@ COPY requirements_refactored.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements_refactored.txt
 
+# Development stage
+FROM python:3.12-alpine AS development
+
+# Install development dependencies for Playwright and Chromium
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    nodejs \
+    npm \
+    bash \
+    curl \
+    git
+
+# Copy virtual environment from builder stage
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set Playwright to use system Chromium
+ENV PLAYWRIGHT_BROWSERS_PATH=/usr/bin
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code
+COPY . .
+
+# Install development tools
+RUN pip install --no-cache-dir debugpy pytest pytest-cov
+
+# Create necessary directories
+RUN mkdir -p /app/data/scans /app/data/screenshots /app/logs
+
+# Install Playwright browsers (Chromium only)
+RUN playwright install chromium --with-deps || true
+
+# Set default environment variables
+ENV PYTHONPATH=/app
+ENV STORAGE_TYPE=file
+ENV HEADLESS=true
+ENV LOG_LEVEL=DEBUG
+ENV DEBUG=true
+
+# Expose ports (including debugger port)
+EXPOSE 5000 50051 5678 5679
+
 # Production stage
 FROM python:3.12-alpine AS production
 
