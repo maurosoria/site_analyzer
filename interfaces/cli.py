@@ -1,12 +1,12 @@
 import argparse
 import json
 from typing import Optional
-from .base import BaseInterface
-from ..core.config import Config
-from ..core.analyzer import SiteAnalyzer
-from ..storage.factory import StorageFactory
-from ..enumeration.factory import EnumeratorFactory
-from ..models.scan_result import ScanResults
+from interfaces.base import BaseInterface
+from core.config import Config
+from core.analyzer import SiteAnalyzer
+from storage.factory import StorageFactory
+from enumeration.factory import EnumeratorFactory
+from models.scan_result import ScanResults
 
 class CLIInterface(BaseInterface):
     """Command line interface"""

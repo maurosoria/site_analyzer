@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
-from ..core.config import Config
-from ..models.scan_result import ScanResults
+from core.config import Config
+from models.scan_result import ScanResults
 
 class BaseInterface(ABC):
     """Base interface for all user interfaces"""
