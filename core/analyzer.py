@@ -1,11 +1,11 @@
 import uuid
 from datetime import datetime
 from typing import List, Optional
-from .config import Config
-from .exceptions import SiteAnalyzerException
-from ..models.scan_result import ScanResults, ScanStatus
-from ..enumeration.base import BaseEnumerator
-from ..storage.base import BaseStorage
+from core.config import Config
+from core.exceptions import SiteAnalyzerException
+from models.scan_result import ScanResults, ScanStatus
+from enumeration.base import BaseEnumerator
+from storage.base import BaseStorage
 
 class SiteAnalyzer:
     """Main orchestrator for site analysis operations"""

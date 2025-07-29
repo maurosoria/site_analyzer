@@ -1,8 +1,8 @@
 from typing import Dict, List, Optional
 from datetime import datetime
-from .base import BaseStorage, MongoStorageMixin
-from ..models.scan_result import ScanResults, ScanStatus, EnumerationResult
-from ..core.config import Config
+from storage.base import BaseStorage, MongoStorageMixin
+from models.scan_result import ScanResults, ScanStatus, EnumerationResult
+from core.config import Config
 
 class MongoDBStorage(BaseStorage, MongoStorageMixin):
     """MongoDB storage implementation"""

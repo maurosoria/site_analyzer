@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
-from ..models.scan_result import ScanResults
-from ..core.config import Config
+from models.scan_result import ScanResults
+from core.config import Config
 
 class BaseStorage(ABC):
     """Base storage interface"""

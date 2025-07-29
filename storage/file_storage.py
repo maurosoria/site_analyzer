@@ -2,9 +2,9 @@ import json
 import os
 from datetime import datetime
 from typing import Dict, List, Optional
-from .base import BaseStorage, FileStorageMixin
-from ..models.scan_result import ScanResults
-from ..core.config import Config
+from storage.base import BaseStorage, FileStorageMixin
+from models.scan_result import ScanResults
+from core.config import Config
 
 class FileStorage(BaseStorage, FileStorageMixin):
     """File-based storage implementation"""
@@ -71,7 +71,7 @@ class FileStorage(BaseStorage, FileStorageMixin):
             with open(file_path, 'r') as f:
                 data = json.load(f)
                 
-            from ..models.scan_result import ScanStatus, EnumerationResult
+            from models.scan_result import ScanStatus, EnumerationResult
             
             result = ScanResults(
                 scan_id=data['scan_id'],

@@ -1,10 +1,10 @@
 from typing import Type
-from .base import BaseStorage
-from .file_storage import FileStorage
-from .mongodb_storage import MongoDBStorage
-from .sql_storage import SQLStorage
-from ..core.config import Config
-from ..core.exceptions import ConfigurationException
+from storage.base import BaseStorage
+from storage.file_storage import FileStorage
+from storage.mongodb_storage import MongoDBStorage
+from storage.sql_storage import SQLStorage
+from core.config import Config
+from core.exceptions import ConfigurationException
 
 class StorageFactory:
     """Factory for creating storage backends"""
