@@ -23,3 +23,11 @@ re  # Built-in
 # Optional dependencies for enhanced functionality
 python-dotenv>=1.0.0  # For environment variable management
 pydantic>=2.5.0  # For enhanced data validation (optional)
+
+# LLM integrations
+google-generativeai>=0.3.0  # For Gemini integration
+openai>=1.0.0  # For future OpenAI integration
+boto3>=1.34.0  # For future AWS Bedrock integration
+
+# Navigation and automation
+capsolver>=1.0.0  # For captcha solving

@@ -31,9 +31,13 @@ class FrameworkConfig:
     
     security_trails_api_key: Optional[str] = None
     
+    llm_provider: str = "gemini"  # "gemini" or "bedrock"
+    
+    gemini_api_key: Optional[str] = None
+    
     aws_bedrock_url: Optional[str] = None
     aws_region: str = "us-east-1"
-    llm_model: str = "anthropic.claude-3-sonnet-20240229-v1:0"
+    llm_model: str = "gemini-2.0-flash-exp"  # Default to Gemini
     
     capsolver_api_key: Optional[str] = None
     
@@ -57,6 +61,8 @@ class SiteAnalyzerFramework:
             headless=config.headless,
             timeout=config.timeout,
             security_trails_api_key=config.security_trails_api_key,
+            llm_provider=config.llm_provider,
+            gemini_api_key=config.gemini_api_key,
             aws_bedrock_url=config.aws_bedrock_url,
             aws_region=config.aws_region,
             llm_model=config.llm_model
@@ -72,7 +78,8 @@ class SiteAnalyzerFramework:
         print(f"📊 Domains to analyze: {len(config.domains)}")
         print(f"🎭 Playwright instances: {config.num_playwright_instances}")
         print(f"💾 Storage type: {config.storage_type}")
-        print(f"🤖 LLM integration: {'✅' if config.aws_bedrock_url else '❌'}")
+        llm_status = "✅" if (config.gemini_api_key and config.llm_provider == "gemini") or (config.aws_bedrock_url and config.llm_provider == "bedrock") else "❌"
+        print(f"🤖 LLM integration: {llm_status} ({config.llm_provider})")
         print(f"🔓 Captcha solving: {'✅' if config.capsolver_api_key else '❌'}")
     
     async def analyze_domains(self) -> List[Dict[str, Any]]:
@@ -177,8 +184,15 @@ def advanced_example_with_llm():
         storage_type="file",
         output_dir="./advanced_results",
         security_trails_api_key="your-api-key-here",
-        aws_bedrock_url="https://bedrock-runtime.us-east-1.amazonaws.com",
-        aws_region="us-east-1",
+        
+        llm_provider="gemini",
+        gemini_api_key="AIza...",  # Your Google AI API key
+        llm_model="gemini-2.0-flash-exp",
+        
+        # aws_bedrock_url="https://bedrock-runtime.us-east-1.amazonaws.com",
+        # aws_region="us-east-1",
+        # llm_model="anthropic.claude-3-sonnet-20240229-v1:0",
+        
         enumerators=["web_scanner", "dns_enumeration", "security_trails"]
     )
     

@@ -13,6 +13,13 @@ class Config:
     
     security_trails_api_key: Optional[str] = None
     
+    llm_provider: str = "gemini"  # "gemini", "openai", "bedrock"
+    gemini_api_key: Optional[str] = None
+    openai_api_key: Optional[str] = None
+    aws_bedrock_url: Optional[str] = None
+    aws_region: str = "us-east-1"
+    llm_model: str = "gemini-2.0-flash-exp"
+    
     enabled_enumerators: Optional[List[str]] = None
     
     grpc_port: int = 50051
@@ -39,5 +46,11 @@ class Config:
             grpc_port=int(os.getenv('GRPC_PORT', '50051')),
             rest_port=int(os.getenv('REST_PORT', '5000')),
             log_level=os.getenv('LOG_LEVEL', 'INFO'),
-            headless=os.getenv('HEADLESS', 'true').lower() == 'true'
+            headless=os.getenv('HEADLESS', 'true').lower() == 'true',
+            llm_provider=os.getenv('LLM_PROVIDER', 'gemini'),
+            gemini_api_key=os.getenv('GEMINI_API_KEY'),
+            openai_api_key=os.getenv('OPENAI_API_KEY'),
+            aws_bedrock_url=os.getenv('AWS_BEDROCK_URL'),
+            aws_region=os.getenv('AWS_REGION', 'us-east-1'),
+            llm_model=os.getenv('LLM_MODEL', 'gemini-2.0-flash-exp')
         )
