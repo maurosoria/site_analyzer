@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields, Namespace
 from typing import Dict, Any
-from .base import BaseInterface
-from ..core.config import Config
-from ..core.analyzer import SiteAnalyzer
-from ..storage.factory import StorageFactory
-from ..enumeration.factory import EnumeratorFactory
-from ..models.scan_result import ScanResults
+from interfaces.base import BaseInterface
+from core.config import Config
+from core.analyzer import SiteAnalyzer
+from storage.factory import StorageFactory
+from enumeration.factory import EnumeratorFactory
+from models.scan_result import ScanResults
 
 class RestAPI(BaseInterface):
     """Flask REST API interface with Swagger documentation"""
