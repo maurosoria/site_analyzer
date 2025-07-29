@@ -15,7 +15,7 @@ services:
     ports:
       - "5000:5000"
       - "5678:5678"  # For Python debugger
-    command: python -m debugpy --listen 0.0.0.0:5678 main_refactored.py --interface rest
+    command: python -m debugpy --listen 0.0.0.0:5678 main_refactored.py rest
 
   # Development configuration for gRPC Service
   site-analyzer-grpc:
@@ -31,7 +31,7 @@ services:
     ports:
       - "50051:50051"
       - "5679:5679"  # For Python debugger
-    command: python -m debugpy --listen 0.0.0.0:5679 main_refactored.py --interface grpc
+    command: python -m debugpy --listen 0.0.0.0:5679 main_refactored.py grpc
 
   # Development configuration for CLI Service
   site-analyzer-cli:
