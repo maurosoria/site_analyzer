@@ -12,9 +12,16 @@ from enumeration.factory import EnumeratorFactory
 from models.scan_result import ScanResults
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from proto import site_analyzer_pb2 as pb2
-from proto import site_analyzer_pb2_grpc as pb2_grpc
+import importlib.util
+
+proto_dir = os.path.join(os.path.dirname(__file__), '..', 'proto')
+pb2_spec = importlib.util.spec_from_file_location("site_analyzer_pb2", os.path.join(proto_dir, "site_analyzer_pb2.py"))
+pb2 = importlib.util.module_from_spec(pb2_spec)
+pb2_spec.loader.exec_module(pb2)
+
+pb2_grpc_spec = importlib.util.spec_from_file_location("site_analyzer_pb2_grpc", os.path.join(proto_dir, "site_analyzer_pb2_grpc.py"))
+pb2_grpc = importlib.util.module_from_spec(pb2_grpc_spec)
+pb2_grpc_spec.loader.exec_module(pb2_grpc)
 
 
 class SiteAnalyzerServicer(pb2_grpc.SiteAnalyzerServicer):
