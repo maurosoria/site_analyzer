@@ -1,2 +1,31 @@
+# Core dependencies
+playwright>=1.40.0
+requests>=2.31.0
 
-playwright
+# Storage backends
+pymongo>=4.6.0  # For MongoDB storage
+sqlalchemy>=2.0.0  # For SQL storage
+
+# API frameworks
+flask>=3.0.0  # For REST API
+flask-restx>=1.3.0  # For Swagger/OpenAPI documentation
+grpcio>=1.60.0  # For gRPC server
+grpcio-tools>=1.60.0  # For gRPC code generation
+grpcio-status>=1.60.0  # For gRPC status codes
+protobuf>=4.21.6,<6.0  # Compatible with grpcio-tools
+
+# Optional dependencies for enhanced functionality
+python-dotenv>=1.0.0  # For environment variable management
+pydantic>=2.5.0  # For enhanced data validation (optional)
+
+# LLM integrations
+google-generativeai>=0.3.0  # For Gemini integration
+openai>=1.0.0  # For future OpenAI integration
+boto3>=1.34.0  # For future AWS Bedrock integration
+
+# Navigation and automation
+capsolver>=1.0.0  # For captcha solving
+
+# Testing dependencies
+pytest>=7.0.0  # For running tests
+pytest-asyncio>=0.21.0  # For async test support
