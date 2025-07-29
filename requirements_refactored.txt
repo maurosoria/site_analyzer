@@ -5,7 +5,7 @@ asyncio
 
 # Storage backends
 pymongo>=4.6.0  # For MongoDB storage
-sqlite3  # Built-in for SQL storage
+# sqlite3 is built-in for Python 3.x
 
 # API frameworks
 flask>=3.0.0  # For REST API
