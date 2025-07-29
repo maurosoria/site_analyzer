@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Test runner service
+  site-analyzer-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      - PYTHONPATH=/app
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-test_key}
+      - CAPSOLVER_API_KEY=${CAPSOLVER_API_KEY:-test_key}
+      - SECURITY_TRAILS_API_KEY=${SECURITY_TRAILS_API_KEY:-test_key}
+      - MONGODB_URL=mongodb://test-mongodb:27017/site_analyzer_test
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: python -m pytest tests/ -v --tb=short
+    depends_on:
+      - test-mongodb
+    networks:
+      - test-network
+
+  # Test MongoDB service
+  test-mongodb:
+    image: mongo:7.0
+    environment:
+      - MONGO_INITDB_DATABASE=site_analyzer_test
+    ports:
+      - "27018:27017"  # Different port to avoid conflicts
+    networks:
+      - test-network
+    tmpfs:
+      - /data/db  # Use tmpfs for faster test database
+
+networks:
+  test-network:
+    driver: bridge
+
+volumes:
+  test_mongodb_data:
+    driver: local

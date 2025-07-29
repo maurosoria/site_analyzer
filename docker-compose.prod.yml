@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # Production configuration for REST API Service
+  site-analyzer-rest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    environment:
+      - LOG_LEVEL=INFO
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Production configuration for gRPC Service
+  site-analyzer-grpc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    environment:
+      - LOG_LEVEL=INFO
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Production configuration for CLI Service
+  site-analyzer-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    environment:
+      - LOG_LEVEL=INFO
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Production configuration for MongoDB
+  mongodb:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Production configuration for Redis
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

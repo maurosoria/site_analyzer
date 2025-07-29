@@ -1,0 +1,62 @@
+[
+  {
+    "name": "focusable_elements",
+    "description": "Selector de elementos con tabindex / enlaces",
+    "regex": "querySelectorAll\\([\"'][^\"']*(?:a\\[href]|\\[tabindex).+?\\)",
+    "severity": "info"
+  },
+  {
+    "name": "html_sink",
+    "description": "Potential XSS sink - innerHTML/insertAdjacentHTML usage",
+    "regex": "(innerHTML|insertAdjacentHTML)\\s*[+*/\\-=]*\\s*",
+    "severity": "high"
+  },
+  {
+    "name": "post_message",
+    "description": "PostMessage event listener - potential security risk",
+    "regex": "addEventListener\\(['\"]message['\"]",
+    "severity": "medium"
+  },
+  {
+    "name": "eval_usage",
+    "description": "Eval function usage - code injection risk",
+    "regex": "\\beval\\s*\\(",
+    "severity": "high"
+  },
+  {
+    "name": "document_write",
+    "description": "Document.write usage - potential XSS",
+    "regex": "document\\.write\\s*\\(",
+    "severity": "high"
+  },
+  {
+    "name": "geolocation_access",
+    "description": "Geolocation API access",
+    "regex": "navigator\\.geolocation",
+    "severity": "medium"
+  },
+  {
+    "name": "local_storage_access",
+    "description": "LocalStorage access patterns",
+    "regex": "(localStorage|sessionStorage)\\.(getItem|setItem|removeItem)",
+    "severity": "info"
+  },
+  {
+    "name": "ajax_requests",
+    "description": "AJAX request patterns",
+    "regex": "(XMLHttpRequest|fetch\\s*\\(|\\$\\.ajax|axios\\.|http\\.get)",
+    "severity": "info"
+  },
+  {
+    "name": "websocket_usage",
+    "description": "WebSocket connection patterns",
+    "regex": "new\\s+WebSocket\\s*\\(",
+    "severity": "medium"
+  },
+  {
+    "name": "crypto_usage",
+    "description": "Cryptographic operations",
+    "regex": "(crypto\\.|CryptoJS|forge\\.|sjcl\\.)",
+    "severity": "info"
+  }
+]

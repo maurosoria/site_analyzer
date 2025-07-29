@@ -1,0 +1,138 @@
+version: '3.8'
+
+services:
+  # REST API Service
+  site-analyzer-rest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: site-analyzer-rest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/scans:/app/data/scans
+      - ./data/screenshots:/app/data/screenshots
+      - ./logs:/app/logs
+    env_file:
+      - .env.rest
+    command: ["python", "-m", "main_refactored", "rest"]
+    restart: unless-stopped
+    networks:
+      - site-analyzer-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - mongodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.site-analyzer-rest.rule=Host(`api.site-analyzer.local`)"
+      - "traefik.http.services.site-analyzer-rest.loadbalancer.server.port=5000"
+
+  # gRPC Service
+  site-analyzer-grpc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: site-analyzer-grpc
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./data/scans:/app/data/scans
+      - ./data/screenshots:/app/data/screenshots
+      - ./logs:/app/logs
+    env_file:
+      - .env.grpc
+    command: ["python", "-m", "main_refactored", "grpc"]
+    restart: unless-stopped
+    networks:
+      - site-analyzer-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import grpc; import time; channel = grpc.insecure_channel('localhost:50051'); grpc.channel_ready_future(channel).result(timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - mongodb
+
+  # CLI Service (for batch operations)
+  site-analyzer-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: site-analyzer-cli
+    volumes:
+      - ./data/scans:/app/data/scans
+      - ./data/screenshots:/app/data/screenshots
+      - ./logs:/app/logs
+      - ./batch-jobs:/app/batch-jobs
+    env_file:
+      - .env.cli
+    command: ["tail", "-f", "/dev/null"]  # Keep container running for manual CLI operations
+    restart: unless-stopped
+    networks:
+      - site-analyzer-network
+    profiles:
+      - cli
+    depends_on:
+      - mongodb
+
+  # MongoDB for shared storage
+  mongodb:
+    image: mongo:7.0-jammy
+    container_name: site-analyzer-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: site_analyzer
+    restart: unless-stopped
+    networks:
+      - site-analyzer-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7.2-alpine
+    container_name: site-analyzer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - site-analyzer-network
+    profiles:
+      - cache
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  site-analyzer-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
