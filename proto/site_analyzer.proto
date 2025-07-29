@@ -1,0 +1,477 @@
+syntax = "proto3";
+
+package site_analyzer;
+
+// SiteAnalyzer service definition
+// Provides comprehensive website analysis and enumeration capabilities
+service SiteAnalyzer {
+  // Analyze a target website
+  // Performs comprehensive analysis including web scanning, DNS enumeration, and security assessment
+  rpc Analyze (AnalyzeRequest) returns (AnalyzeResponse) {}
+  
+  // Get scan result by ID
+  // Retrieves detailed results of a previously completed scan
+  rpc GetScanResult (GetScanResultRequest) returns (ScanResult) {}
+  
+  // List recent scans
+  // Returns a paginated list of recent scan summaries
+  rpc ListScans (ListScansRequest) returns (ListScansResponse) {}
+  
+  // Delete scan result
+  // Removes a scan result from storage
+  rpc DeleteScan (DeleteScanRequest) returns (DeleteScanResponse) {}
+  
+  // Get available enumerators
+  // Returns list of available enumeration strategies
+  rpc GetEnumerators (GetEnumeratorsRequest) returns (GetEnumeratorsResponse) {}
+  
+  // Get storage types
+  // Returns list of available storage backends
+  rpc GetStorageTypes (GetStorageTypesRequest) returns (GetStorageTypesResponse) {}
+  
+  // Health check
+  // Returns service health status
+  rpc HealthCheck (HealthCheckRequest) returns (HealthCheckResponse) {}
+  
+  // Stream scan progress
+  // Provides real-time updates on scan progress
+  rpc StreamScanProgress (StreamScanProgressRequest) returns (stream ScanProgressUpdate) {}
+}
+
+// Request to analyze a target website
+message AnalyzeRequest {
+  // Target URL to analyze (required)
+  string target = 1;
+  
+  // Specific enumerators to use (optional, defaults to all enabled)
+  repeated string enumerators = 2;
+  
+  // Additional configuration options
+  map<string, string> options = 3;
+}
+
+// Response from analyze operation
+message AnalyzeResponse {
+  // Unique scan identifier
+  string scan_id = 1;
+  
+  // Target URL that was analyzed
+  string target = 2;
+  
+  // Current scan status
+  ScanStatus status = 3;
+  
+  // Scan start time (ISO format)
+  string start_time = 4;
+  
+  // Estimated completion time (ISO format, optional)
+  string estimated_completion = 5;
+  
+  // Initial results (may be partial)
+  ScanResult initial_results = 6;
+}
+
+// Request to get scan result by ID
+message GetScanResultRequest {
+  // Scan identifier
+  string scan_id = 1;
+}
+
+// Request to list recent scans
+message ListScansRequest {
+  // Maximum number of scans to return (default: 100)
+  int32 limit = 1;
+  
+  // Offset for pagination (default: 0)
+  int32 offset = 2;
+  
+  // Filter by target domain (optional)
+  string target_filter = 3;
+  
+  // Filter by status (optional)
+  ScanStatus status_filter = 4;
+}
+
+// Response for list scans operation
+message ListScansResponse {
+  // List of scan summaries
+  repeated ScanSummary scans = 1;
+  
+  // Total number of scans available
+  int32 total_count = 2;
+  
+  // Whether there are more results available
+  bool has_more = 3;
+}
+
+// Request to delete a scan
+message DeleteScanRequest {
+  // Scan identifier to delete
+  string scan_id = 1;
+}
+
+// Response for delete scan operation
+message DeleteScanResponse {
+  // Whether deletion was successful
+  bool success = 1;
+  
+  // Error message if deletion failed
+  string error_message = 2;
+}
+
+// Request to get available enumerators
+message GetEnumeratorsRequest {
+  // No parameters needed
+}
+
+// Response with available enumerators
+message GetEnumeratorsResponse {
+  // List of available enumerators
+  repeated EnumeratorInfo enumerators = 1;
+}
+
+// Request to get storage types
+message GetStorageTypesRequest {
+  // No parameters needed
+}
+
+// Response with storage types
+message GetStorageTypesResponse {
+  // List of available storage types
+  repeated StorageTypeInfo storage_types = 1;
+}
+
+// Health check request
+message HealthCheckRequest {
+  // No parameters needed
+}
+
+// Health check response
+message HealthCheckResponse {
+  // Service health status
+  string status = 1;
+  
+  // Service name
+  string service = 2;
+  
+  // Service version
+  string version = 3;
+  
+  // Uptime in seconds
+  int64 uptime = 4;
+}
+
+// Request to stream scan progress
+message StreamScanProgressRequest {
+  // Scan identifier to monitor
+  string scan_id = 1;
+}
+
+// Scan progress update
+message ScanProgressUpdate {
+  // Scan identifier
+  string scan_id = 1;
+  
+  // Current status
+  ScanStatus status = 2;
+  
+  // Progress percentage (0-100)
+  int32 progress_percent = 3;
+  
+  // Current operation description
+  string current_operation = 4;
+  
+  // Partial results (updated incrementally)
+  ScanResult partial_results = 5;
+  
+  // Timestamp of this update
+  string timestamp = 6;
+}
+
+// Scan result summary for listing
+message ScanSummary {
+  // Unique scan identifier
+  string scan_id = 1;
+  
+  // Target URL
+  string target = 2;
+  
+  // Scan status
+  ScanStatus status = 3;
+  
+  // Scan start time (ISO format)
+  string start_time = 4;
+  
+  // Scan end time (ISO format, optional)
+  string end_time = 5;
+  
+  // Number of discovered items
+  ScanStats stats = 6;
+}
+
+// Complete scan result
+message ScanResult {
+  // Unique scan identifier
+  string scan_id = 1;
+  
+  // Target URL
+  string target = 2;
+  
+  // Scan status
+  ScanStatus status = 3;
+  
+  // Scan start time (ISO format)
+  string start_time = 4;
+  
+  // Scan end time (ISO format, optional)
+  string end_time = 5;
+  
+  // Discovered email addresses
+  repeated string emails = 6;
+  
+  // Discovered URLs
+  repeated string urls = 7;
+  
+  // Discovered API endpoints
+  repeated string endpoints = 8;
+  
+  // Extracted keywords
+  repeated string keywords = 9;
+  
+  // Discovered subdomains
+  repeated string subdomains = 10;
+  
+  // Discovered IP addresses
+  repeated string ip_addresses = 11;
+  
+  // Discovered virtual hosts
+  repeated string virtual_hosts = 12;
+  
+  // JavaScript file paths
+  repeated string js_paths = 13;
+  
+  // Source map matches
+  repeated string sourcemap_matches = 14;
+  
+  // DNS records
+  map<string, string> dns_records = 15;
+  
+  // Historical DNS data
+  map<string, string> historical_dns = 16;
+  
+  // WHOIS data
+  map<string, string> whois_data = 17;
+  
+  // Domain information
+  map<string, string> domain_info = 18;
+  
+  // Detected services
+  map<string, string> detected_services = 19;
+  
+  // Detailed enumeration results
+  repeated EnumerationResult enumeration_results = 20;
+  
+  // Detected frameworks and technologies
+  repeated FrameworkInfo frameworks = 21;
+  
+  // Security analysis results
+  SecurityAnalysis security_analysis = 22;
+}
+
+// Enumeration result from a specific enumerator
+message EnumerationResult {
+  // Name of the enumerator
+  string enumerator_name = 1;
+  
+  // Target that was enumerated
+  string target = 2;
+  
+  // Timestamp of enumeration
+  string timestamp = 3;
+  
+  // Data discovered by this enumerator
+  map<string, string> data = 4;
+  
+  // Any errors encountered
+  repeated string errors = 5;
+  
+  // Execution time in milliseconds
+  int64 execution_time_ms = 6;
+}
+
+// Information about detected frameworks
+message FrameworkInfo {
+  // Framework name (e.g., "React", "Angular", "Vue")
+  string name = 1;
+  
+  // Framework version (if detected)
+  string version = 2;
+  
+  // Confidence level (0.0 - 1.0)
+  float confidence = 3;
+  
+  // Evidence that led to detection
+  repeated string evidence = 4;
+  
+  // Framework category (e.g., "frontend", "backend", "build-tool")
+  string category = 5;
+}
+
+// Security analysis results
+message SecurityAnalysis {
+  // Overall security score (0-100)
+  int32 security_score = 1;
+  
+  // Detected vulnerabilities
+  repeated SecurityVulnerability vulnerabilities = 2;
+  
+  // Security recommendations
+  repeated string recommendations = 3;
+  
+  // Exposed sensitive information
+  repeated SensitiveInfo exposed_info = 4;
+}
+
+// Security vulnerability information
+message SecurityVulnerability {
+  // Vulnerability type
+  string type = 1;
+  
+  // Severity level
+  VulnerabilitySeverity severity = 2;
+  
+  // Description of the vulnerability
+  string description = 3;
+  
+  // Location where vulnerability was found
+  string location = 4;
+  
+  // Remediation advice
+  string remediation = 5;
+}
+
+// Sensitive information exposure
+message SensitiveInfo {
+  // Type of sensitive information
+  string type = 1;
+  
+  // The exposed information (may be redacted)
+  string value = 2;
+  
+  // Location where it was found
+  string location = 3;
+  
+  // Risk level
+  RiskLevel risk_level = 4;
+}
+
+// Statistics about scan results
+message ScanStats {
+  // Number of emails found
+  int32 email_count = 1;
+  
+  // Number of URLs found
+  int32 url_count = 2;
+  
+  // Number of endpoints found
+  int32 endpoint_count = 3;
+  
+  // Number of subdomains found
+  int32 subdomain_count = 4;
+  
+  // Number of IP addresses found
+  int32 ip_count = 5;
+  
+  // Number of frameworks detected
+  int32 framework_count = 6;
+}
+
+// Information about an enumerator
+message EnumeratorInfo {
+  // Enumerator name
+  string name = 1;
+  
+  // Description of what it does
+  string description = 2;
+  
+  // Whether it's currently enabled
+  bool enabled = 3;
+  
+  // Required configuration (e.g., API keys)
+  repeated string required_config = 4;
+  
+  // Estimated execution time
+  string estimated_time = 5;
+}
+
+// Information about a storage type
+message StorageTypeInfo {
+  // Storage type name
+  string name = 1;
+  
+  // Description of the storage type
+  string description = 2;
+  
+  // Whether it's currently supported/available
+  bool supported = 3;
+  
+  // Required configuration
+  repeated string required_config = 4;
+}
+
+// Scan status enumeration
+enum ScanStatus {
+  // Unknown status
+  SCAN_STATUS_UNKNOWN = 0;
+  
+  // Scan is pending/queued
+  SCAN_STATUS_PENDING = 1;
+  
+  // Scan is currently running
+  SCAN_STATUS_RUNNING = 2;
+  
+  // Scan completed successfully
+  SCAN_STATUS_COMPLETED = 3;
+  
+  // Scan failed with errors
+  SCAN_STATUS_FAILED = 4;
+  
+  // Scan was cancelled
+  SCAN_STATUS_CANCELLED = 5;
+}
+
+// Vulnerability severity levels
+enum VulnerabilitySeverity {
+  // Unknown severity
+  VULNERABILITY_SEVERITY_UNKNOWN = 0;
+  
+  // Low severity
+  VULNERABILITY_SEVERITY_LOW = 1;
+  
+  // Medium severity
+  VULNERABILITY_SEVERITY_MEDIUM = 2;
+  
+  // High severity
+  VULNERABILITY_SEVERITY_HIGH = 3;
+  
+  // Critical severity
+  VULNERABILITY_SEVERITY_CRITICAL = 4;
+}
+
+// Risk levels for sensitive information
+enum RiskLevel {
+  // Unknown risk
+  RISK_LEVEL_UNKNOWN = 0;
+  
+  // Low risk
+  RISK_LEVEL_LOW = 1;
+  
+  // Medium risk
+  RISK_LEVEL_MEDIUM = 2;
+  
+  // High risk
+  RISK_LEVEL_HIGH = 3;
+  
+  // Critical risk
+  RISK_LEVEL_CRITICAL = 4;
+}

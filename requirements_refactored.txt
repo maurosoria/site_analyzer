@@ -9,8 +9,10 @@ sqlite3  # Built-in for SQL storage
 
 # API frameworks
 flask>=3.0.0  # For REST API
+flask-restx>=1.3.0  # For Swagger/OpenAPI documentation
 grpcio>=1.60.0  # For gRPC server
 grpcio-tools>=1.60.0  # For gRPC code generation
+grpcio-status>=1.60.0  # For gRPC status codes
 
 # Data handling
 dataclasses  # Built-in for Python 3.7+
