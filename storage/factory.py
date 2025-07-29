@@ -16,9 +16,12 @@ class StorageFactory:
     }
     
     @classmethod
-    def create(cls, config: Config) -> BaseStorage:
+    def create(cls, config) -> BaseStorage:
         """Create storage backend based on config"""
-        storage_type = config.storage_type.lower()
+        if isinstance(config, dict):
+            storage_type = config.get('type', '').lower()
+        else:
+            storage_type = config.storage_type.lower()
         
         if storage_type not in cls._storage_types:
             raise ConfigurationException(f"Unknown storage type: {storage_type}")

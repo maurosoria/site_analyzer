@@ -9,7 +9,7 @@ from core.config import Config
 class SQLStorage(BaseStorage, SQLStorageMixin):
     """SQL database storage implementation (SQLite)"""
     
-    def __init__(self, config: Config):
+    def __init__(self, config):
         super().__init__(config)
         self._reuse_connection = True
         self._init_database()
@@ -17,12 +17,18 @@ class SQLStorage(BaseStorage, SQLStorageMixin):
     def _create_connection(self, database_path: Optional[str] = None):
         """Create SQLite connection"""
         if database_path is None:
-            database_path = self.config.storage_config.get('database_path', './scans.db')
+            if isinstance(self.config, dict):
+                database_path = self.config.get('connection_string', 'sqlite:///./scans.db').replace('sqlite:///', '')
+            else:
+                database_path = self.config.storage_config.get('database_path', './scans.db')
         return sqlite3.connect(str(database_path))
     
     def _init_database(self):
         """Initialize database tables"""
-        database_path = self.config.storage_config.get('database_path', './scans.db')
+        if isinstance(self.config, dict):
+            database_path = self.config.get('connection_string', 'sqlite:///./scans.db').replace('sqlite:///', '')
+        else:
+            database_path = self.config.storage_config.get('database_path', './scans.db')
         conn = self.get_connection(database_path)
         cursor = conn.cursor()
         
@@ -48,7 +54,10 @@ class SQLStorage(BaseStorage, SQLStorageMixin):
     
     def save(self, result: ScanResults) -> str:
         """Save scan result to SQL database"""
-        database_path = self.config.storage_config.get('database_path', './scans.db')
+        if isinstance(self.config, dict):
+            database_path = self.config.get('connection_string', 'sqlite:///./scans.db').replace('sqlite:///', '')
+        else:
+            database_path = self.config.storage_config.get('database_path', './scans.db')
         conn = self.get_connection(database_path)
         cursor = conn.cursor()
         
@@ -101,7 +110,10 @@ class SQLStorage(BaseStorage, SQLStorageMixin):
     
     def load(self, scan_id: str) -> Optional[ScanResults]:
         """Load scan result from SQL database"""
-        database_path = self.config.storage_config.get('database_path', './scans.db')
+        if isinstance(self.config, dict):
+            database_path = self.config.get('connection_string', 'sqlite:///./scans.db').replace('sqlite:///', '')
+        else:
+            database_path = self.config.storage_config.get('database_path', './scans.db')
         conn = self.get_connection(database_path)
         cursor = conn.cursor()
         
@@ -159,7 +171,10 @@ class SQLStorage(BaseStorage, SQLStorageMixin):
     
     def list_scans(self, limit: int = 100) -> List[Dict]:
         """List recent scans"""
-        database_path = self.config.storage_config.get('database_path', './scans.db')
+        if isinstance(self.config, dict):
+            database_path = self.config.get('connection_string', 'sqlite:///./scans.db').replace('sqlite:///', '')
+        else:
+            database_path = self.config.storage_config.get('database_path', './scans.db')
         conn = self.get_connection(database_path)
         cursor = conn.cursor()
         
@@ -187,7 +202,10 @@ class SQLStorage(BaseStorage, SQLStorageMixin):
     
     def delete(self, scan_id: str) -> bool:
         """Delete scan result from SQL database"""
-        database_path = self.config.storage_config.get('database_path', './scans.db')
+        if isinstance(self.config, dict):
+            database_path = self.config.get('connection_string', 'sqlite:///./scans.db').replace('sqlite:///', '')
+        else:
+            database_path = self.config.storage_config.get('database_path', './scans.db')
         conn = self.get_connection(database_path)
         cursor = conn.cursor()
         

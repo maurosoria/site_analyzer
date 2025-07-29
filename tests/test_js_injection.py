@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, patch, mock_open
-from ..lib.site_analyzer import load_scripts, load_payloads, get_url_content
-from ..lib.extractors import (
+from lib.site_analyzer import load_scripts, load_payloads, get_url_content
+from lib.extractors import (
     extract_emails_from_js, extract_urls_from_js, 
     extract_keywords_from_js, extract_endpoints,
     extract_js_paths, extract_sourcemap_matches
@@ -42,7 +42,7 @@ class TestJavaScriptInjection:
         
         js_injects = {'test.js': 'console.log("test");'}
         
-        with patch('..lib.site_analyzer.load_payloads', return_value={}):
+        with patch('lib.site_analyzer.load_payloads', return_value={}):
             content, assets = await get_url_content(mock_browser, 'https://test.com', scan_results, js_injects)
             
             assert content == "<html>Test</html>"
@@ -97,7 +97,7 @@ class TestJSInjectionIntegration:
         
         js_injects = {'extract.js': 'return document.body.innerHTML;'}
         
-        with patch('..lib.site_analyzer.load_payloads', return_value={}):
+        with patch('lib.site_analyzer.load_payloads', return_value={}):
             content, assets = await get_url_content(mock_browser, 'https://test.com', scan_results, js_injects)
             
             assert scan_results.content == content

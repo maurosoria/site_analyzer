@@ -9,13 +9,20 @@ from core.config import Config
 class FileStorage(BaseStorage, FileStorageMixin):
     """File-based storage implementation"""
     
-    def __init__(self, config: Config):
+    def __init__(self, config):
         super().__init__(config)
+        if isinstance(config, dict):
+            self.output_dir = config.get('output_dir', './scans')
+        else:
+            self.output_dir = config.storage_config.get('output_dir', './scans')
         self._ensure_storage_directory()
     
     def _ensure_storage_directory(self):
         """Ensure storage directory exists"""
-        storage_dir = self.config.storage_config.get('directory', './scans')
+        if isinstance(self.config, dict):
+            storage_dir = self.config.get('output_dir', './scans')
+        else:
+            storage_dir = self.config.storage_config.get('directory', './scans')
         os.makedirs(storage_dir, exist_ok=True)
     
     def save(self, result: ScanResults) -> str:
@@ -114,7 +121,10 @@ class FileStorage(BaseStorage, FileStorageMixin):
     
     def list_scans(self, limit: int = 100) -> List[Dict]:
         """List recent scans"""
-        storage_dir = self.config.storage_config.get('directory', './scans')
+        if isinstance(self.config, dict):
+            storage_dir = self.config.get('output_dir', './scans')
+        else:
+            storage_dir = self.config.storage_config.get('directory', './scans')
         scans = []
         
         if not os.path.exists(storage_dir):

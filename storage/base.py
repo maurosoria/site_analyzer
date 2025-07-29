@@ -6,7 +6,7 @@ from core.config import Config
 class BaseStorage(ABC):
     """Base storage interface"""
     
-    def __init__(self, config: Config):
+    def __init__(self, config):
         self.config = config
         
     @abstractmethod
@@ -34,7 +34,11 @@ class FileStorageMixin:
     
     def _get_file_path(self, scan_id: str, extension: str = "json") -> str:
         """Get file path for scan ID"""
-        storage_dir = getattr(self, 'config').storage_config.get('directory', './scans')
+        config = getattr(self, 'config')
+        if isinstance(config, dict):
+            storage_dir = config.get('output_dir', './scans')
+        else:
+            storage_dir = config.storage_config.get('directory', './scans')
         return f"{storage_dir}/{scan_id}.{extension}"
         
     def _ensure_directory(self, path: str):
@@ -83,7 +87,12 @@ class MongoStorageMixin:
         """Get MongoDB collection"""
         from pymongo import MongoClient
         
-        mongo_config = getattr(self, 'config').storage_config
+        config = getattr(self, 'config')
+        if isinstance(config, dict):
+            mongo_config = config
+        else:
+            mongo_config = config.storage_config
+            
         client = MongoClient(mongo_config.get('connection_string', 'mongodb://localhost:27017'))
         db = client[mongo_config.get('database', 'site_analyzer')]
         return db[mongo_config.get('collection', 'scans')]

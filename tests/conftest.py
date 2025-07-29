@@ -2,16 +2,15 @@ import pytest
 import asyncio
 from unittest.mock import Mock, AsyncMock
 from playwright.async_api import Browser, Page
-from ..core.config import Config
-from ..lib.scan_result import ScanResults
+from core.config import Config
+from lib.scan_result import ScanResults
 
 @pytest.fixture
 def config():
     """Provide test configuration"""
     return Config(
         headless=True,
-        timeout=10000,
-        debug=False
+        timeout=10000
     )
 
 @pytest.fixture

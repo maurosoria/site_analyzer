@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import AsyncMock, patch
-from ..enumeration.web_scanner import WebScannerEnumerator
-from ..enumeration.security_trails import SecurityTrailsEnumerator
-from ..enumeration.dns_enumeration import DNSEnumerator
+from enumeration.web_scanner import WebScannerEnumerator
+from enumeration.security_trails import SecurityTrailsEnumerator
+from enumeration.dns_enumeration import DNSEnumerator
 
 class TestWebScannerEnumerator:
     """Test WebScannerEnumerator with JS injection"""

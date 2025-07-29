@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import Mock, patch, AsyncMock
-from ..interfaces.cli import CLIInterface
-from ..interfaces.rest_api import RestAPIInterface
-from ..interfaces.grpc_server import GRPCInterface
+from interfaces.cli import CLIInterface
+from interfaces.rest_api import RestAPI
+from interfaces.grpc_server import GRPCInterface
 
 class TestCLIInterface:
     """Test CLI interface"""
@@ -53,7 +53,7 @@ class TestRestAPIInterface:
     
     def test_api_initialization(self, config):
         """Test REST API initialization"""
-        api = RestAPIInterface(config)
+        api = RestAPI(config)
         assert api.config == config
         assert api.app is not None
     
@@ -66,7 +66,7 @@ class TestRestAPIInterface:
         mock_analyzer.analyze.return_value = mock_result
         mock_analyzer_class.return_value = mock_analyzer
         
-        api = RestAPIInterface(config)
+        api = RestAPI(config)
         
         with api.app.test_client() as client:
             response = client.post('/analyze', json={
@@ -81,7 +81,7 @@ class TestRestAPIInterface:
     
     def test_analyze_endpoint_missing_target(self, config):
         """Test /analyze endpoint with missing target"""
-        api = RestAPIInterface(config)
+        api = RestAPI(config)
         
         with api.app.test_client() as client:
             response = client.post('/analyze', json={
@@ -94,7 +94,7 @@ class TestRestAPIInterface:
     
     def test_health_endpoint(self, config):
         """Test /health endpoint"""
-        api = RestAPIInterface(config)
+        api = RestAPI(config)
         
         with api.app.test_client() as client:
             response = client.get('/health')
@@ -164,7 +164,7 @@ class TestInterfaceIntegration:
         mock_analyzer_class.return_value = mock_analyzer
         
         cli = CLIInterface(config)
-        api = RestAPIInterface(config)
+        api = RestAPI(config)
         grpc_interface = GRPCInterface(config)
         
         assert cli.config == config
@@ -174,7 +174,7 @@ class TestInterfaceIntegration:
     def test_interface_error_handling(self, config):
         """Test error handling across interfaces"""
         with patch('..core.analyzer.SiteAnalyzer', side_effect=Exception("Test error")):
-            api = RestAPIInterface(config)
+            api = RestAPI(config)
             
             with api.app.test_client() as client:
                 response = client.post('/analyze', json={
