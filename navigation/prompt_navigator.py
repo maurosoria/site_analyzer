@@ -13,9 +13,9 @@ import json
 from pathlib import Path
 
 from playwright.async_api import async_playwright, Page, Browser
-from .screenshot_storage import ScreenshotStorage
-from .captcha_solver import CaptchaSolver
-from ..core.config import Config
+from navigation.screenshot_storage import ScreenshotStorage
+from navigation.captcha_solver import CaptchaSolver
+from core.config import Config
 
 @dataclass
 class NavigationStep:
