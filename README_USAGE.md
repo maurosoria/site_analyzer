@@ -175,3 +175,42 @@ SiteAnalyzerFramework
 ```
 
 This framework provides a simple, elegant interface while maintaining powerful capabilities for comprehensive site analysis with modern browser automation and AI integration.
+
+## Docker Support
+
+For easy deployment and consistent environments, the framework supports Docker:
+
+```bash
+# Pull the Docker image
+docker pull maurosoria/site_analyzer:latest
+
+# Run with CLI interface
+docker run -e GEMINI_API_KEY=your-key -e SECURITY_TRAILS_API_KEY=your-key -e CAPSOLVER_API_KEY=your-key \
+  maurosoria/site_analyzer:latest --target example.com
+```
+
+For a complete setup with all services (REST API, gRPC, CLI):
+
+```bash
+# Clone the repository
+git clone https://github.com/maurosoria/site_analyzer.git
+cd site_analyzer
+
+# Configure environment variables
+cp .env.example .env.rest
+cp .env.example .env.grpc
+cp .env.example .env.cli
+
+# Edit the .env files to add your API keys
+# Then start the services
+docker-compose up -d
+```
+
+See [README_DOCKER.md](README_DOCKER.md) for detailed Docker setup instructions.
+
+## Additional Documentation
+
+- [API Documentation](docs/API.md): Comprehensive REST API documentation
+- [gRPC Documentation](docs/GRPC.md): Detailed gRPC service documentation and client examples
+- [Gemini Integration](README_GEMINI.md): Guide for using Google Gemini 2.5 Flash-Lite
+- [Navigation Guide](README_NAVIGATION.md): Instructions for prompt-based navigation and captcha solving
