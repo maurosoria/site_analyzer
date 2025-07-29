@@ -53,9 +53,14 @@ config = FrameworkConfig(
     # API tokens
     security_trails_api_key="your-securitytrails-key",
     
-    # AWS Bedrock LLM integration
-    aws_bedrock_url="https://bedrock-runtime.us-east-1.amazonaws.com",
-    aws_region="us-east-1",
+    # LLM integration (Gemini recommended for cost-effectiveness)
+    llm_provider="gemini",  # or "bedrock"
+    gemini_api_key=os.getenv('GEMINI_API_KEY'),  # Google AI API key
+    llm_model="gemini-2.0-flash-exp",
+    
+    # Alternative: AWS Bedrock LLM integration
+    # aws_bedrock_url="https://bedrock-runtime.us-east-1.amazonaws.com",
+    # aws_region="us-east-1",
     
     # Enumeration strategies
     enumerators=["web_scanner", "dns_enumeration", "security_trails"]
@@ -101,8 +106,9 @@ results = await analyzer.analyze_with_llm_agent("https://target.com", analysis_g
 - **SQL**: Relational database storage (SQLite, PostgreSQL, MySQL)
 
 ### 🤖 LLM Integration
-- AWS Bedrock integration for intelligent analysis
-- BrowserUse for LLM-driven browser automation
+- **Google Gemini 2.5 Flash-Lite**: Cost-effective, fast LLM analysis (Recommended)
+- **AWS Bedrock**: Enterprise-grade LLM integration
+- **BrowserUse**: LLM-driven browser automation
 - Combines traditional scanning with AI insights
 
 ### ⚖️ Load Balancing
@@ -128,7 +134,8 @@ python example_usage.py
 ```bash
 # Set API keys
 export SECURITY_TRAILS_API_KEY="your-key"
-export AWS_BEDROCK_URL="https://bedrock-runtime.us-east-1.amazonaws.com"
+export GEMINI_API_KEY="your-gemini-key"  # Get from https://aistudio.google.com/app/apikey
+export AWS_BEDROCK_URL="https://bedrock-runtime.us-east-1.amazonaws.com"  # Optional
 
 # Run advanced example
 python -c "from example_usage import advanced_example_with_llm; advanced_example_with_llm()"
@@ -149,6 +156,9 @@ python -c "from example_usage import load_balanced_example; load_balanced_exampl
 | `storage_type` | Storage backend (file/mongodb/sql) | "file" |
 | `output_dir` | Output directory for results | "./results" |
 | `security_trails_api_key` | SecurityTrails API key | None |
+| `llm_provider` | LLM provider (gemini/bedrock) | "gemini" |
+| `gemini_api_key` | Google Gemini API key | None |
+| `llm_model` | Gemini model version | "gemini-2.0-flash-exp" |
 | `aws_bedrock_url` | AWS Bedrock endpoint URL | None |
 | `enumerators` | List of enumeration strategies | ["web_scanner", "dns_enumeration"] |
 

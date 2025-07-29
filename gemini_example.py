@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 """
 Example of using Gemini 2.5 Flash-Lite with the site_analyzer framework
+
+This example demonstrates how to use Gemini for cost-effective LLM analysis.
+
+
+1. Get your Google AI API key from: https://aistudio.google.com/app/apikey
+2. Set environment variable: export GEMINI_API_KEY="your-api-key"
+3. Install dependencies: pip install google-generativeai>=0.3.0
+4. Run this example: python gemini_example.py
+
+
+- Cost-effective: ~75% cheaper than other LLM providers
+- Fast: Optimized for quick responses
+- Powerful: Excellent for website analysis and navigation
+- Easy integration: Simple API setup
 """
 
 import asyncio
